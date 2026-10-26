@@ -8,8 +8,9 @@ h1{font-size:18px;margin:0}#hud{display:flex;flex-wrap:wrap;gap:6px}button{font:
 .cloud{position:absolute;background:#fff;border-radius:50px;opacity:.85}
 #bus{position:absolute;top:30%;left:-160px;font-size:54px;transition:transform .2s}#bus.honk{transform:scale(1.25) rotate(-6deg)}
 #honk{position:absolute;font-weight:bold;color:#c33;display:none}
-#tree{position:absolute;right:6%;bottom:8%;font-size:110px}
-.kid{position:absolute;bottom:10%;font-size:14px;background:#fff;border-radius:10px;padding:3px 6px;opacity:0;transition:opacity .6s}
+#tree{position:absolute;right:8%;bottom:12%;font-size:clamp(80px,22vw,110px)}
+#crew{position:absolute;left:8px;right:8px;bottom:2%;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;pointer-events:none}
+.kid{font-size:14px;background:#fff;border-radius:10px;padding:3px 6px;opacity:0;transition:opacity .6s}
 .leaf{position:absolute;font-size:22px;pointer-events:none}
 #msg{position:absolute;left:0;right:0;top:12%;text-align:center;font-size:16px;padding:0 10px}
 </style></head><body>
@@ -21,7 +22,8 @@ const sky=document.getElementById('sky'),bus=document.getElementById('bus'),honk
 let started=false,x=-160,leaves=0,dropped=0,last=0;
 const crew=['Root 📜','Branch 🌿','Tide 🌊','589 💛'];
 for(let i=0;i<5;i++){const c=document.createElement('div');c.className='cloud';c.style.cssText=`width:${60+i*15}px;height:${25+i*4}px;top:${8+i*14}%;left:${(i*23)%90}%`;sky.appendChild(c)}
-const kids=crew.map((n,i)=>{const k=document.createElement('div');k.className='kid';k.textContent=n;k.style.right=(4+i*7)+'%';k.style.bottom=(4+(i%2)*6)+'%';sky.appendChild(k);return k});
+const row=document.createElement('div');row.id='crew';sky.appendChild(row);
+const kids=crew.map(n=>{const k=document.createElement('div');k.className='kid';k.textContent=n;row.appendChild(k);return k});
 function honk(){if(!started)return;bus.classList.add('honk');honkEl.style.display='block';honkEl.style.left=(x+60)+'px';honkEl.style.top=(bus.offsetTop-20)+'px';setTimeout(()=>{bus.classList.remove('honk');honkEl.style.display='none'},250);for(let i=0;i<3;i++)leaf()}
 function leaf(){const l=document.createElement('div');l.className='leaf';l.textContent=['🍃','🍂','🍁'][Math.random()*3|0];const r=tree.getBoundingClientRect(),s=sky.getBoundingClientRect();let lx=r.left-s.left+Math.random()*r.width,ly=r.top-s.top+20,vx=(Math.random()-.5)*1.5;l.style.left=lx+'px';l.style.top=ly+'px';sky.appendChild(l);leaves++;score.textContent='Leaves: '+leaves;
 (function f(){ly+=1.6;lx+=vx+Math.sin(ly/15);l.style.left=lx+'px';l.style.top=ly+'px';if(ly<s.height-10)requestAnimationFrame(f);else l.remove()})()}
